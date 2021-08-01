@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ ${#} -ge 2 ]
+then 
+    echo "usage: ${0} <keyword>"
+    exit 1
+fi
+
+if [ ${#} -eq 1 ]
+then 
+    unfilteredOut=$(cat listOfWebsites | cut -d ',' -f 1 | xargs curl | grep title | grep "${1}" )
+else
+    unfilteredOut=$(cat listOfWebsites | cut -d ',' -f 1 | xargs curl | grep title )
+fi
+
+unfilteredOut=${unfilteredOut//'<title>'/''}
+unfilteredOut=${unfilteredOut//'</title>'/''}
+unfilteredOut=${unfilteredOut//'CDATA'/''}
+unfilteredOut=${unfilteredOut//'<![['/''}
+unfilteredOut=${unfilteredOut//']]>'/''}
+echo "${unfilteredOut}" | grep -v -E "<|>|#|&"
