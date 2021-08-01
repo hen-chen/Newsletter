@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ${#} -ge 4 ] || [ ${#} -le 1 ]
+then 
+    echo "usage: ${0} <email@email> <output.txt> <keyword>"
+    exit 1
+fi 
+
+> ${2}  # clear txt file
+./readFromText "${3}" > ${2}
+cat ${2} | sendmail -s "a subject" -a "huh?" ${1} 
+echo "done"
